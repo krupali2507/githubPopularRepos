@@ -1,0 +1,17 @@
+/* Write your CSS here */
+.language-filter {
+  margin-right: 15px;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.selected-filter {
+  color: lightblue;
+  border: 1px solid lightblue;
+  cursor: pointer;
+}
+
+.btn {
+  background: none;
+  border: none;
+}
