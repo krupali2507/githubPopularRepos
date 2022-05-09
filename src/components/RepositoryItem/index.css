@@ -1,38 +1,32 @@
 /* Write your CSS here */
-
-.repository-item {
-  flex-basis: 30%;
-  border: 1px solid black;
-  background-color: #f8f8ff;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.avatar {
-  height: 60px;
-  width: 60px;
-}
-
-.icon-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-}
-
-.repo-detail-container {
+.list-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  margin: 10px;
+  background-color: #f8f8ff;
+  border-radius: 15px;
+  padding: 10px;
+  width: 20vw;
+}
+.head-name {
+  color: #e73959;
+  font-size: 20px;
+}
+.logo-image {
+  height: 100px;
+  width: 100px;
+}
+.detail-container {
+  display: flex;
+  align-items: center;
+}
+.logos {
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
+.des-head {
+  font-size: 12px;
 }

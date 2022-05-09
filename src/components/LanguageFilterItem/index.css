@@ -1,17 +1,15 @@
 /* Write your CSS here */
-.language-filter {
-  margin-right: 15px;
-  padding: 5px;
-  border-radius: 8px;
+.list-style {
+  list-style: none;
+  color: black;
 }
-
-.selected-filter {
-  color: lightblue;
-  border: 1px solid lightblue;
-  cursor: pointer;
+.list-style-active {
+  border: solid #0284c7;
+  border-width: 1px;
+  color: #0284c7;
+  border-radius: 15px;
 }
-
-.btn {
-  background: none;
+.button {
+  background-color: transparent;
   border: none;
 }

@@ -1,8 +1,8 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
-import './index.css'
 import LanguageFilterItem from '../LanguageFilterItem'
 import RepositoryItem from '../RepositoryItem'
+import './index.css'
 
 const languageFiltersData = [
   {id: 'ALL', language: 'All'},
@@ -12,73 +12,85 @@ const languageFiltersData = [
   {id: 'CSS', language: 'CSS'},
 ]
 
+// Write your code here
 class GithubPopularRepos extends Component {
-  state = {
-    selectedFilter: languageFiltersData[0].id,
-    activeRepositoryData: [],
-    isLoading: false,
+  state = {activeTabId: 'ALL', listItem: [], isLoader: true, isSuccess: true}
+
+  componentDidMount = () => {
+    const {activeTabId} = this.state
+    this.getUserData(activeTabId)
   }
 
-  componentDidMount() {
-    this.getRepositoryData()
+  onChangeTab = id => {
+    this.getUserData(id)
+    this.setState({activeTabId: id})
   }
 
-  getRepositoryData = async () => {
-    this.setState({isLoading: true})
-    const {selectedFilter} = this.state
-    console.log(selectedFilter)
-    const url = `https://apis.ccbp.in/popular-repos?language=${selectedFilter}`
-    const response = await fetch(url)
-
-    if (response.ok === true) {
-      const data = await response.json()
-      const updatedData = data.popular_repos.map(eachRepo => ({
-        id: eachRepo.id,
-        name: eachRepo.name,
-        issuesCount: eachRepo.issuesCount,
-        avatarUrl: eachRepo.avatar_url,
-        forksCount: eachRepo.forks_count,
-        startsCount: eachRepo.starts_count,
-      }))
-
-      this.setState({activeRepositoryData: updatedData, isLoading: false})
+  getUserData = async id => {
+    this.setState({isLoader: true})
+    console.log(id)
+    const url = `https://apis.ccbp.in/popular-repos?language=${id}`
+    const responseData = await fetch(url)
+    const data = await responseData.json()
+    const requiredData = data.popular_repos
+    const updatedData = requiredData.map(eachItem => ({
+      avatarUrl: eachItem.avatar_url,
+      forksCount: eachItem.forks_count,
+      id: eachItem.id,
+      issuesCount: eachItem.issues_count,
+      name: eachItem.name,
+      starsCount: eachItem.stars_count,
+    }))
+    console.log(updatedData)
+    if (responseData.ok === true) {
+      this.setState({listItem: updatedData, isLoader: false})
+    } else {
+      this.setState({isLoader: false, isSuccess: false})
     }
   }
 
-  onChangeFilter = id => {
-    this.setState({selectedFilter: id}, this.getRepositoryData)
+  renderResult = () => {
+    const {isSuccess, listItem} = this.state
+
+    return isSuccess ? (
+      <ul className="item-container">
+        {listItem.map(eachItem => (
+          <RepositoryItem key={eachItem.id} itemDetail={eachItem} />
+        ))}
+      </ul>
+    ) : (
+      <div className="failure-container">
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/api-failure-view.png"
+          alt="failure view"
+        />
+        <h1>Something Went Wrong</h1>
+      </div>
+    )
   }
 
-  renderLoadingView = () => (
-    <div testid="loader">
-      <Loader type="ThreeDots" color="#0284c7" height={80} width={80} />
-    </div>
-  )
-
   render() {
-    const {selectedFilter, activeRepositoryData, isLoading} = this.state
+    const {activeTabId, isLoader} = this.state
 
     return (
-      <div className="bg-container">
-        <h1 className="heading">Popular</h1>
-        <ul className="language-filter-container">
-          {languageFiltersData.map(eachData => (
+      <div className="background-container">
+        <h1 className="heading-popular">Popular</h1>
+        <ul className="language-container">
+          {languageFiltersData.map(eachItem => (
             <LanguageFilterItem
-              filterDetail={eachData}
-              key={eachData.id}
-              onChangeFilter={this.onChangeFilter}
-              isSelected={selectedFilter === eachData.id}
+              key={eachItem.id}
+              onChangeTab={this.onChangeTab}
+              isActive={eachItem.id === activeTabId}
+              itemDetail={eachItem}
             />
           ))}
         </ul>
-        {isLoading ? (
-          this.renderLoadingView()
+        {isLoader ? (
+          <div testid="loader">
+            <Loader type="ThreeDots" color="#0284c7" height={80} width={80} />
+          </div>
         ) : (
-          <ul className="repository-item-container">
-            {activeRepositoryData.map(eachRepo => (
-              <RepositoryItem repoDetail={eachRepo} key={eachRepo.id} />
-            ))}
-          </ul>
+          this.renderResult()
         )}
       </div>
     )
